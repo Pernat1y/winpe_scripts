@@ -38,25 +38,36 @@ reg unload HKLM\offline_software
 :start
 cls
 @echo "Select architecture:"
-@echo "1 - amd64"
-@echo "2 - x86"
-set /p arch= "[1/2]: "
+@echo "1 - amd64 stable"
+@echo "2 - x86 stable"
+@echo "3 - amd64 dev"
+@echo "4 - x86 dev"
+set /p arch= "[1/2/3/4]: "
 
 IF "%arch%"=="1" (
 set arch=amd64
+set type=stable
 ) else if "%arch%"=="2" (
 set arch=x86
+set type=stable
+) else if "%arch%"=="3" (
+set arch=amd64
+set type=dev
+) else if "%arch%"=="4" (
+set arch=x86
+set type=dev
 ) else (
 @echo "Unknown option"
 exit
 )
 
-@echo Using architecture: %arch%
+@echo Using architecture: %arch% %type%
 
 set lang=en-us
 
 set work_dir=C:\winpe_%arch%
-set out_iso=C:\winpe_%arch%.iso
+set soft_dir=\\10.1.0.3\data\soft\winpe\winpe_soft_%arch%_%type%
+set out_iso=C:\winpe_%arch%_%type%.iso
 
 set WinPE_OCs=%ProgramFiles(x86)%\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\%arch%\WinPE_OCs
 
@@ -115,6 +126,9 @@ Dism /Quiet /Add-Package /Image:"%work_dir%\mount" /PackagePath:"%WinPE_OCs%\%la
 @echo WinPE-EnhancedStorage
 Dism /Quiet /Add-Package /Image:"%work_dir%\mount" /PackagePath:"%WinPE_OCs%\WinPE-EnhancedStorage.cab"
 Dism /Quiet /Add-Package /Image:"%work_dir%\mount" /PackagePath:"%WinPE_OCs%\%lang%\WinPE-EnhancedStorage_%lang%.cab"
+
+@echo Copying files into the "%work_dir%\mount"
+xcopy /E /C /Q /H /R /Y "%soft_dir%" "%work_dir%\mount"
 
 @echo This process marks files that can be removed during the export process
 Dism /Quiet /Cleanup-Image /Image="%work_dir%\mount" /StartComponentCleanup /ResetBase
