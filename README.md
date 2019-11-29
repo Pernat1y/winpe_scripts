@@ -1,2 +1,2 @@
 # winpe_scripts
-Scripts to build WinPE images
+Scripts to work with WinPE images
