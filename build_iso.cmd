@@ -1,5 +1,5 @@
 @echo off
-@echo Script version 2019_11_29
+@echo Script version 2020_05_02
 
 goto start
 
@@ -7,6 +7,7 @@ goto start
 # Docs
 https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-intro
 https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-mount-and-customize
+https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-create-usb-bootable-drive
 https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference
 https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpeshlini-reference-launching-an-app-when-winpe-starts
 
@@ -141,6 +142,9 @@ Dism /Quiet /Unmount-Image /MountDir:"%work_dir%\mount" /Commit
 
 @echo Building ISO / writing USB
 MakeWinPEMedia /ISO /f "%work_dir%" "%out_iso%"
+
+@echo To write USB, use:
+@echo MakeWinPEMedia /UFD "%work_dir%" Disk:
 
 @echo Done
 
