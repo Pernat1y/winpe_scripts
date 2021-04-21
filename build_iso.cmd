@@ -73,8 +73,8 @@ set out_iso=C:\winpe_%arch%_%type%.iso
 set WinPE_OCs=%ProgramFiles(x86)%\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\%arch%\WinPE_OCs
 
 @echo Cleaning up
-Dism /Quiet /Cleanup-Mountpoints /MountDir:"%work_dir%\mount" >null
-Dism /Quiet /Unmount-Image /MountDir:"%work_dir%\mount" /Discard >null
+Dism /Quiet /Cleanup-Mountpoints /MountDir:"%work_dir%\mount" >nul
+Dism /Quiet /Unmount-Image /MountDir:"%work_dir%\mount" /Discard >nul
 rmdir /S /Q "%work_dir%"
 
 @echo Copying files
