@@ -1,5 +1,5 @@
 @echo off
-@echo Script version 2020_05_02
+@echo Script version 2021_04_25
 
 goto start
 
@@ -7,7 +7,6 @@ goto start
 # Docs
 https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-intro
 https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-mount-and-customize
-https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-create-usb-bootable-drive
 https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference
 https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpeshlini-reference-launching-an-app-when-winpe-starts
 
@@ -39,36 +38,31 @@ reg unload HKLM\offline_software
 :start
 cls
 @echo "Select architecture:"
-@echo "1 - amd64 stable"
-@echo "2 - x86   stable"
-@echo "3 - amd64 dev"
-@echo "4 - x86   dev"
-set /p arch= "[1/2/3/4]: "
+@echo "1 - amd64  default"
+@echo "2 - x86    default"
+@echo "3 - x86    mini"
+set /p arch= "[1/2/3]: "
 
+set type=default
 IF "%arch%"=="1" (
 set arch=amd64
-set type=stable
 ) else if "%arch%"=="2" (
 set arch=x86
-set type=stable
 ) else if "%arch%"=="3" (
-set arch=amd64
-set type=dev
-) else if "%arch%"=="4" (
 set arch=x86
-set type=dev
+set type=mini
 ) else (
-@echo "Unknown option"
-exit
+@echo "Unknown option."
+goto start
 )
 
 @echo Using architecture: %arch% %type%
 
 set lang=en-us
 
-set work_dir=C:\winpe_%arch%
-set soft_dir=C:\winpe_soft_%arch%_%type%
-set out_iso=C:\winpe_%arch%_%type%.iso
+set work_dir=C:\winpe\winpe_%arch%_%type%
+set soft_dir=C:\winpe\winpe_soft_%arch%_%type%
+set out_iso=C:\winpe\winpe_%arch%_%type%.iso
 
 set WinPE_OCs=%ProgramFiles(x86)%\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\%arch%\WinPE_OCs
 
@@ -143,8 +137,8 @@ Dism /Quiet /Unmount-Image /MountDir:"%work_dir%\mount" /Commit
 @echo Building ISO / writing USB
 MakeWinPEMedia /ISO /f "%work_dir%" "%out_iso%"
 
-@echo To write USB, use:
-@echo MakeWinPEMedia /UFD "%work_dir%" Disk:
+@echo Cleaning up
+rmdir /S /Q "%work_dir%"
 
 @echo Done
 
