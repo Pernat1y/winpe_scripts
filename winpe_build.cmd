@@ -134,6 +134,9 @@ Dism /Quiet /Set-ScratchSpace:512 /Image:"%work_dir%\mount"
 @echo Unmounting WinPE image
 Dism /Quiet /Unmount-Image /MountDir:"%work_dir%\mount" /Commit
 
+rem To write USB, use:
+rem MakeWinPEMedia /UFD "%work_dir%" Disk:
+
 @echo Building ISO / writing USB
 MakeWinPEMedia /ISO /f "%work_dir%" "%out_iso%"
 
